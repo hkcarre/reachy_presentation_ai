@@ -1,449 +1,843 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>From "AI Will Replace Me" to "AI, Replace This"</title>
-    
+
     <!-- Reveal.js CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
-    
+
     <!-- Highlight.js for code -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    
+
+    <!-- Google Fonts - matching inspiration -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700&family=Roboto+Mono:wght@100;400&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
-            --fear-color: #ff4444;
-            --power-color: #00d4aa;
-            --accent-color: #7c3aed;
-            --bg-dark: #0a0a0f;
+            --bg: #0a0a0a;
+            --primary: #00ff9f;
+            --secondary: #00d4ff;
+            --warning: #ff9500;
+            --danger: #ff4444;
+            --text: #ffffff;
+            --gray: #333333;
         }
-        
+
+        /* Reset Reveal.js defaults */
+        .reveal-viewport {
+            background: var(--bg);
+        }
+
         .reveal {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
-        
-        .reveal h1, .reveal h2, .reveal h3 {
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            text-transform: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
-        .reveal code {
-            font-family: 'JetBrains Mono', monospace;
+
+        .reveal code,
+        .reveal .mono {
+            font-family: 'Roboto Mono', monospace;
         }
-        
-        /* Title slide styling */
-        .title-slide h1 {
-            font-size: 2.5em;
-            line-height: 1.3;
+
+        /* ================================ */
+        /* SCANLINE EFFECT */
+        /* ================================ */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 159, 0.15);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
         }
-        
-        .title-slide .fear {
-            color: var(--fear-color);
-            text-decoration: line-through;
-            opacity: 0.6;
+
+        @keyframes scanline {
+            0% {
+                top: -2px;
+            }
+
+            100% {
+                top: 100%;
+            }
         }
-        
-        .title-slide .power {
-            color: var(--power-color);
-            font-weight: 700;
+
+        /* ================================ */
+        /* PARTICLE CANVAS */
+        /* ================================ */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
         }
-        
-        /* Fear vs Power styling */
-        .fear-text {
-            color: var(--fear-color);
+
+        /* ================================ */
+        /* TEXT GLOW EFFECTS */
+        /* ================================ */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 255, 159, 0.5), 0 0 20px rgba(0, 255, 159, 0.3), 0 0 40px rgba(0, 255, 159, 0.2);
         }
-        
-        .power-text {
-            color: var(--power-color);
+
+        .text-glow-blue {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3);
         }
-        
-        /* Robot visualization embed */
-        .robot-embed {
-            background: #1a1a2e;
-            border: 2px solid var(--accent-color);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+
+        .text-glow-red {
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5), 0 0 20px rgba(255, 68, 68, 0.3);
         }
-        
-        .robot-embed iframe {
-            border-radius: 8px;
-            border: none;
+
+        /* ================================ */
+        /* BACKGROUND GLOWS */
+        /* ================================ */
+        .bg-glow-green {
+            background: radial-gradient(circle, rgba(0, 255, 159, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
         }
-        
-        /* Control cards */
+
+        .bg-glow-blue {
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        /* ================================ */
+        /* COLORS */
+        /* ================================ */
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-secondary {
+            color: var(--secondary);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .text-muted {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ================================ */
+        /* PROGRESS BAR (TOP) */
+        /* ================================ */
+        .reveal .progress {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .reveal .progress span {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+        }
+
+        /* ================================ */
+        /* TITLE SLIDE */
+        /* ================================ */
+        .title-container {
+            position: relative;
+        }
+
+        .title-orb {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: pulse-orb 4s ease-in-out infinite;
+        }
+
+        .title-orb::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            border: 1px solid rgba(0, 255, 159, 0.2);
+            border-radius: 50%;
+            animation: spin 15s linear infinite;
+        }
+
+        .title-orb::after {
+            content: '';
+            position: absolute;
+            inset: -40px;
+            border: 1px dashed rgba(0, 255, 159, 0.1);
+            border-radius: 50%;
+            animation: spin 25s linear infinite reverse;
+        }
+
+        .title-orb .core {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+        }
+
+        @keyframes pulse-orb {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================================ */
+        /* FEAR TEXT (STRIKETHROUGH) */
+        /* ================================ */
+        .fear-strike {
+            color: var(--danger);
+            position: relative;
+            display: inline-block;
+        }
+
+        .fear-strike::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 3px;
+            background: var(--danger);
+            animation: strike 0.5s ease-out forwards;
+            animation-delay: 1s;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        @keyframes strike {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* ================================ */
+        /* CINEMATIC TEXT (TYPEWRITER) */
+        /* ================================ */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary);
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: var(--primary);
+            }
+        }
+
+        /* ================================ */
+        /* CONTROL CARDS */
+        /* ================================ */
         .control-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
             margin-top: 30px;
         }
-        
+
         .control-card {
-            background: rgba(124, 58, 237, 0.2);
-            border: 1px solid var(--accent-color);
-            border-radius: 10px;
-            padding: 20px;
+            background: rgba(0, 255, 159, 0.05);
+            border: 1px solid rgba(0, 255, 159, 0.2);
+            padding: 20px 15px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        
+
+        .control-card:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 159, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .control-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .control-card:hover::before {
+            opacity: 1;
+        }
+
         .control-card .key {
             font-size: 2em;
             font-weight: bold;
-            color: var(--power-color);
-            background: rgba(0, 212, 170, 0.2);
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            border-radius: 10px;
-            margin: 0 auto 10px;
+            color: var(--primary);
+            font-family: 'Roboto Mono', monospace;
+            text-shadow: 0 0 10px var(--primary);
         }
-        
-        /* Quote styling */
-        .big-quote {
-            font-size: 1.8em;
-            font-style: italic;
-            color: var(--power-color);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 30px;
-            text-align: left;
+
+        .control-card .label {
+            font-size: 0.7em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        
-        /* Comparison table */
+
+        /* ================================ */
+        /* COMPARISON TABLE */
+        /* ================================ */
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
         }
-        
+
         .comparison-table th,
         .comparison-table td {
-            padding: 15px 20px;
+            padding: 20px;
             text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .comparison-table th {
-            font-size: 1.2em;
-        }
-        
-        .comparison-table .old {
-            color: var(--fear-color);
-        }
-        
-        .comparison-table .new {
-            color: var(--power-color);
-        }
-        
-        /* Animated robot icon */
-        .robot-icon {
-            font-size: 4em;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        /* Step indicator */
-        .step-badge {
-            display: inline-block;
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
             font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .comparison-table td.old {
+            color: var(--danger);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .comparison-table td.new {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ================================ */
+        /* TERMINAL BLOCK */
+        /* ================================ */
+        .terminal-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8em;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal-block .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .terminal-block .status {
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* ================================ */
+        /* NEURAL BAR CHART */
+        /* ================================ */
+        .neural-bars {
+            display: flex;
+            gap: 3px;
+            height: 40px;
+            align-items: flex-end;
+        }
+
+        .neural-bars .bar {
+            flex: 1;
+            background: var(--secondary);
+            opacity: 0.6;
+            animation: neural-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes neural-pulse {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(0.3);
+            }
+        }
+
+        /* ================================ */
+        /* QUOTE STYLING */
+        /* ================================ */
+        .big-quote {
+            font-size: 1.5em;
+            font-weight: 300;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 30px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* ================================ */
+        /* BADGE */
+        /* ================================ */
+        .phase-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(0, 255, 159, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.6em;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
             margin-bottom: 20px;
         }
-        
-        /* Code block styling */
+
+        /* ================================ */
+        /* SIDE META DISPLAY */
+        /* ================================ */
+        .side-meta {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* ================================ */
+        /* REVEAL.JS OVERRIDES */
+        /* ================================ */
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal .slides>section {
+            padding: 40px 60px;
+        }
+
         .reveal pre {
             box-shadow: none;
-            font-size: 0.7em;
+            font-size: 0.65em;
+            width: 100%;
         }
-        
+
         .reveal pre code {
-            background: #1e1e2e;
-            border-radius: 10px;
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 159, 0.2);
+            border-radius: 8px;
+            padding: 25px;
+            max-height: 500px;
         }
-        
-        /* Emoji sizing */
-        .emoji-large {
-            font-size: 3em;
+
+        /* Center certain slides */
+        .reveal .slides section.center-content {
+            text-align: center;
         }
-        
-        /* Demo panel */
-        .demo-panel {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 15px;
-            padding: 30px;
-            border: 2px solid var(--accent-color);
+
+        .reveal .slides section.center-content h1,
+        .reveal .slides section.center-content h2,
+        .reveal .slides section.center-content p {
+            text-align: center;
         }
-        
-        /* Highlight boxes */
-        .highlight-box {
-            background: rgba(124, 58, 237, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px 0;
-        }
-        
-        /* Animation for reveal */
-        .fragment.grow-in {
+
+        /* ================================ */
+        /* ANIMATIONS */
+        /* ================================ */
+        .reveal .slides section .fragment.fade-up {
             opacity: 0;
-            transform: scale(0.8);
+            transform: translateY(20px);
         }
-        
-        .fragment.grow-in.visible {
+
+        .reveal .slides section .fragment.fade-up.visible {
             opacity: 1;
-            transform: scale(1);
+            transform: translateY(0);
             transition: all 0.5s ease;
+        }
+
+        /* ================================ */
+        /* ROBOT ICON ANIMATION */
+        /* ================================ */
+        .robot-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .control-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reveal .slides>section {
+                padding: 20px 30px;
+            }
         }
     </style>
 </head>
+
 <body>
+    <!-- Scanline Effect -->
+    <div class="scanline"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Side Meta -->
+    <div class="side-meta">AI Presentation System v2.0</div>
+
     <div class="reveal">
         <div class="slides">
-            
+
             <!-- ============================================ -->
             <!-- TITLE SLIDE -->
             <!-- ============================================ -->
-            <section class="title-slide" data-background-gradient="linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)">
-                <div class="robot-icon">🤖</div>
-                <h1>
-                    From <span class="fear">"AI Will Replace Me"</span><br>
-                    to <span class="power">"AI, Replace This"</span>
-                </h1>
-                <p style="margin-top: 40px; opacity: 0.7;">A live demonstration with Reachy 2</p>
+            <section class="center-content">
+                <div class="title-container">
+                    <div class="title-orb">
+                        <div class="core"></div>
+                    </div>
+                    <h1 style="font-size: 2.2em; margin-bottom: 20px;">
+                        From <span class="fear-strike">"AI Will Replace Me"</span><br>
+                        to <span class="text-primary text-glow">"AI, Replace This"</span>
+                    </h1>
+                    <p class="mono text-muted" style="font-size: 0.9em;">
+                        A live demonstration with Reachy 2
+                    </p>
+                </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- THE FEAR -->
             <!-- ============================================ -->
-            <section data-background-color="#1a0a0a">
-                <h2 class="fear-text">The Fear</h2>
-                <div class="fragment">
-                    <p style="font-size: 1.5em;">"AI is coming for my job"</p>
-                </div>
-                <div class="fragment">
-                    <p style="font-size: 1.5em;">"I can't compete with machines"</p>
-                </div>
-                <div class="fragment">
-                    <p style="font-size: 1.5em;">"I'm going to be replaced"</p>
-                </div>
-                <div class="fragment" style="margin-top: 50px;">
-                    <p style="font-size: 2em; color: var(--fear-color);">😰</p>
+            <section class="center-content" data-background="rgba(30, 10, 10, 0.8)">
+                <span class="phase-badge">Phase 01</span>
+                <h2 class="text-danger text-glow-red" style="font-size: 3em;">THE FEAR</h2>
+                <div style="max-width: 600px; margin: 40px auto;">
+                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"AI is coming
+                        for my job"</p>
+                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"I can't compete
+                        with machines"</p>
+                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"I'm going to be
+                        replaced"</p>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- THE FLIP -->
             <!-- ============================================ -->
-            <section data-background-color="#0a1a1a">
-                <h2 class="power-text">The Flip</h2>
-                <p class="big-quote">
-                    "But what if the question isn't<br>
-                    <span class="fear-text">what AI will do TO you</span>...<br><br>
-                    but <span class="power-text">what AI can do FOR you?</span>"
-                </p>
+            <section class="center-content">
+                <span class="phase-badge">Phase 02</span>
+                <h2 style="font-size: 2.5em;">THE FLIP</h2>
+                <div class="big-quote" style="max-width: 700px; margin: 40px auto;">
+                    But what if the question isn't<br>
+                    <span class="text-danger">what AI will do TO you</span>...<br><br>
+                    but <span class="text-primary text-glow">what AI can do FOR you?</span>
+                </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- MINDSET COMPARISON -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)">
-                <h2>The Mindset Shift</h2>
-                <table class="comparison-table">
+            <section>
+                <span class="phase-badge">Paradigm Shift</span>
+                <h2>THE MINDSET SHIFT</h2>
+                <table class="comparison-table" style="margin-top: 30px;">
                     <tr>
-                        <th class="old">❌ OLD MINDSET</th>
-                        <th class="new">✅ NEW MINDSET</th>
+                        <th class="text-danger">❌ OLD_MINDSET</th>
+                        <th class="text-primary">✓ NEW_MINDSET</th>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">"AI is coming for my job"</td>
                         <td class="new">"AI, go do this for me"</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">Passive victim</td>
                         <td class="new">Active director</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">Fear of being replaced</td>
                         <td class="new">Power to delegate</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">Human vs. Machine</td>
                         <td class="new">Human commanding Machine</td>
                     </tr>
                 </table>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- MEET REACHY -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #16213e 0%, #0a0a0f 100%)">
-                <h2>Meet Reachy 2</h2>
-                <div style="display: flex; align-items: center; justify-content: space-around;">
-                    <div style="flex: 1;">
-                        <p class="emoji-large">🤖</p>
-                        <ul style="text-align: left; font-size: 0.9em;">
-                            <li class="fragment">7 DoF arms with grippers</li>
-                            <li class="fragment">Expressive head with antennas</li>
-                            <li class="fragment">Full Python SDK control</li>
-                            <li class="fragment">Waits for YOUR commands</li>
+            <section>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+                    <div>
+                        <span class="phase-badge">Hardware</span>
+                        <h2>MEET REACHY 2</h2>
+                        <ul style="margin-top: 30px; line-height: 2;">
+                            <li class="fragment fade-up">7 DoF arms with precision grippers</li>
+                            <li class="fragment fade-up">Expressive head with animated antennas</li>
+                            <li class="fragment fade-up">Full Python SDK control</li>
+                            <li class="fragment fade-up text-primary">Waits for YOUR commands</li>
                         </ul>
                     </div>
-                    <div style="flex: 1;" class="fragment">
-                        <div class="demo-panel">
-                            <p style="font-size: 0.8em; opacity: 0.7;">LIVE ROBOT SIMULATION</p>
-                            <p style="font-size: 2em;">👁️</p>
-                            <p><a href="http://localhost:6080/vnc.html?autoconnect=1&resize=remote" target="_blank" style="color: var(--power-color);">Open Visualization →</a></p>
+                    <div class="fragment fade-up">
+                        <div class="terminal-block">
+                            <div class="header">
+                                <span>REACHY_SDK_v2.0</span>
+                                <span class="status">● CONNECTED</span>
+                            </div>
+                            <div style="color: var(--primary);">
+                                <p>&gt; from reachy2_sdk import ReachySDK</p>
+                                <p>&gt; reachy = ReachySDK(host='localhost')</p>
+                                <p>&gt; reachy.turn_on()</p>
+                                <p class="text-muted"># Awaiting commands...</p>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <div class="neural-bars">
+                                    <div class="bar" style="height: 80%; animation-delay: 0s;"></div>
+                                    <div class="bar" style="height: 60%; animation-delay: 0.1s;"></div>
+                                    <div class="bar" style="height: 90%; animation-delay: 0.2s;"></div>
+                                    <div class="bar" style="height: 40%; animation-delay: 0.3s;"></div>
+                                    <div class="bar" style="height: 70%; animation-delay: 0.4s;"></div>
+                                    <div class="bar" style="height: 50%; animation-delay: 0.5s;"></div>
+                                    <div class="bar" style="height: 85%; animation-delay: 0.6s;"></div>
+                                    <div class="bar" style="height: 65%; animation-delay: 0.7s;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- ACT 1: THE OPENER -->
             <!-- ============================================ -->
-            <section data-background-color="#0a0a0f">
-                <span class="step-badge">ACT 1</span>
-                <h2>The Dismissive Handwave</h2>
-                <div class="fragment">
-                    <p style="font-size: 1.3em; opacity: 0.8;">Robot is slumped. Defeated. Waiting.</p>
-                </div>
-                <div class="fragment" style="margin: 40px 0;">
-                    <p style="font-size: 1.5em;">🎤 "Everyone's worried about AI replacing them..."</p>
-                </div>
-                <div class="fragment">
-                    <p style="font-size: 1.5em;">👋 "But watch this..."</p>
-                </div>
-                <div class="fragment" style="margin-top: 40px;">
-                    <p style="font-size: 2em; color: var(--power-color); font-weight: bold;">
-                        "AI, STAND AT ATTENTION!"
-                    </p>
-                    <p style="font-size: 0.9em; opacity: 0.6;">[Press 1 or 2]</p>
+            <section class="center-content">
+                <span class="phase-badge">Act 01</span>
+                <h2 style="font-size: 2.5em;">THE DISMISSIVE HANDWAVE</h2>
+                <div style="max-width: 700px; margin: 40px auto;">
+                    <p class="fragment fade-up text-muted" style="font-size: 1.2em;">Robot is slumped. Defeated.
+                        Waiting.</p>
+                    <p class="fragment fade-up" style="font-size: 1.3em; margin: 30px 0;">🎤 "Everyone's worried about
+                        AI replacing them..."</p>
+                    <p class="fragment fade-up" style="font-size: 1.3em;">👋 "But watch this..."</p>
+                    <div class="fragment fade-up" style="margin-top: 50px;">
+                        <p class="text-primary text-glow" style="font-size: 2.5em; font-weight: bold;">"AI, STAND AT
+                            ATTENTION!"</p>
+                        <p class="mono text-muted" style="margin-top: 15px;">[Press 1 or 2]</p>
+                    </div>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- PUNCHLINE 1 -->
             <!-- ============================================ -->
-            <section data-background-color="#0a1a1a">
-                <h2 class="power-text" style="font-size: 2.5em;">
+            <section class="center-content"
+                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.1) 0%, rgba(10, 10, 10, 1) 70%)">
+                <h2 style="font-size: 3em; line-height: 1.4;">
                     AI doesn't replace you.<br>
-                    <span style="color: white;">AI REPORTS to you.</span>
+                    <span class="text-primary text-glow">AI REPORTS to you.</span>
                 </h2>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- ACT 2: IMPROV DIRECTOR -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 100%)">
-                <span class="step-badge">ACT 2</span>
-                <h2>The Live Improv Director</h2>
-                <p style="font-size: 1.3em;">Shout something you'd love to never do again!</p>
-                
-                <div class="control-grid" style="margin-top: 40px;">
-                    <div class="control-card fragment">
+            <section>
+                <span class="phase-badge">Act 02</span>
+                <h2>THE LIVE IMPROV DIRECTOR</h2>
+                <p style="font-size: 1.1em; margin: 20px 0 10px; color: rgba(255,255,255,0.7);">Shout something you'd
+                    love to never do again!</p>
+                <p class="text-primary" style="font-size: 1.5em; margin-bottom: 30px;">I'll show you: "AI, Replace
+                    THIS!"</p>
+
+                <div class="control-grid">
+                    <div class="control-card fragment fade-up">
                         <div class="key">3</div>
-                        <p>Boring Meeting</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">😴 → 😵</p>
+                        <div class="label">Boring Meeting 😴</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">4</div>
-                        <p>Pointing at Charts</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">👉 📊</p>
+                        <div class="label">Pointing 👉</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">5</div>
-                        <p>Nodding Along</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">🙂‍↕️ 🙂‍↕️</p>
+                        <div class="label">Nodding 🙂‍↕️</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">6</div>
-                        <p>Shrug</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">🤷</p>
+                        <div class="label">Shrugging 🤷</div>
                     </div>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- COMMAND FRAME -->
             <!-- ============================================ -->
-            <section data-background-color="#0a0a0f">
-                <h2 style="font-size: 3em; color: var(--power-color);">
-                    "AI, Replace THIS!"
-                </h2>
-                <p style="font-size: 1.2em; opacity: 0.7; margin-top: 30px;">
+            <section class="center-content"
+                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.15) 0%, rgba(10, 10, 10, 1) 60%)">
+                <h1 class="text-primary text-glow" style="font-size: 4em;">"AI, Replace THIS!"</h1>
+                <p style="font-size: 1.3em; margin-top: 30px; color: rgba(255,255,255,0.6);">
                     You're the director. AI is the performer.
                 </p>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- ACT 3: EMOTION AMPLIFIER -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #2d1b4e 0%, #0a0a0f 100%)">
-                <span class="step-badge">ACT 3</span>
-                <h2>The Emotion Amplifier</h2>
-                <p style="font-size: 1.2em; opacity: 0.8;">
-                    "People fear AI because they think it's cold and calculating.<br>
-                    But watch what happens when we give AI... <em>stage directions</em>."
+            <section>
+                <span class="phase-badge">Act 03</span>
+                <h2>THE EMOTION AMPLIFIER</h2>
+                <p style="font-size: 1em; margin: 15px 0 30px; color: rgba(255,255,255,0.6);">
+                    "People fear AI because they think it's cold. But watch when we give AI... <span
+                        class="text-primary">stage directions.</span>"
                 </p>
-                
-                <div class="control-grid" style="margin-top: 40px;">
-                    <div class="control-card fragment">
+
+                <div class="control-grid">
+                    <div class="control-card fragment fade-up">
                         <div class="key">7</div>
-                        <p>CURIOUS</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">🤔</p>
+                        <div class="label">CURIOUS 🤔</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">8</div>
-                        <p>DEFEATED</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">😔</p>
+                        <div class="label">DEFEATED 😔</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">9</div>
-                        <p>EXCITED</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">🎉</p>
+                        <div class="label">EXCITED 🎉</div>
                     </div>
-                    <div class="control-card fragment">
+                    <div class="control-card fragment fade-up">
                         <div class="key">0</div>
-                        <p>LISTENING</p>
-                        <p style="font-size: 0.8em; opacity: 0.6;">👂</p>
+                        <div class="label">LISTENING 👂</div>
                     </div>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- PUNCHLINE 2 -->
             <!-- ============================================ -->
-            <section data-background-color="#0a0a0f">
-                <h2 style="font-size: 2em;">
-                    AI is a <span class="power-text">blank canvas</span>.
+            <section class="center-content">
+                <h2 style="font-size: 2.5em;">
+                    AI is a <span class="text-primary text-glow">blank canvas</span>.
                 </h2>
-                <p style="font-size: 1.5em; margin-top: 30px;" class="fragment">
-                    YOU bring the emotion.<br>
-                    YOU bring the intent.
-                </p>
-                <p style="font-size: 1.5em; margin-top: 30px; opacity: 0.7;" class="fragment">
-                    Without your direction, it just sits there.
-                </p>
+                <div class="fragment fade-up" style="margin-top: 40px;">
+                    <p style="font-size: 1.5em;">
+                        YOU bring the emotion.<br>
+                        YOU bring the intent.
+                    </p>
+                </div>
+                <div class="fragment fade-up" style="margin-top: 30px;">
+                    <p class="text-muted" style="font-size: 1.3em;">
+                        Without your direction, it just sits there.
+                    </p>
+                </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- THE CODE -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)">
-                <h2>Under the Hood</h2>
-                <pre><code class="python" data-trim>
+            <section>
+                <span class="phase-badge">Under the Hood</span>
+                <h2>THE CODE</h2>
+                <pre><code class="python" data-trim data-line-numbers>
 from reachy2_sdk import ReachySDK
 
 # Connect to robot
@@ -458,133 +852,209 @@ reachy.head.look_at(0.5, 0, 0.2)
 
 # AI doesn't decide. AI OBEYS.
                 </code></pre>
-                <p class="fragment" style="margin-top: 20px; color: var(--power-color);">
+                <p class="fragment fade-up text-primary" style="margin-top: 25px; font-size: 1.1em;">
                     Simple. Powerful. Under YOUR control.
                 </p>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- KEY REFRAMES -->
             <!-- ============================================ -->
-            <section data-background-color="#0a0a0f">
-                <h2>Reframe Your Thinking</h2>
-                <table class="comparison-table">
+            <section>
+                <span class="phase-badge">Cognitive Reframe</span>
+                <h2>REFRAME YOUR THINKING</h2>
+                <table class="comparison-table" style="margin-top: 20px;">
                     <tr>
-                        <th class="old">❌ FEAR PHRASE</th>
-                        <th class="new">✅ YOUR COUNTER</th>
+                        <th class="text-danger">FEAR_PHRASE</th>
+                        <th class="text-primary">YOUR_COUNTER</th>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">"AI will take my job"</td>
                         <td class="new">"AI will take my TASKS"</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">"AI is smarter than me"</td>
                         <td class="new">"AI is faster at SPECIFIC things"</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">"I can't compete with AI"</td>
                         <td class="new">"I don't compete. I DIRECT."</td>
                     </tr>
-                    <tr class="fragment">
+                    <tr class="fragment fade-up">
                         <td class="old">"AI doesn't need me"</td>
                         <td class="new">"AI is USELESS without me"</td>
                     </tr>
                 </table>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- CLOSER -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #16213e 0%, #0a0a0f 100%)">
-                <h2>The Goodbye</h2>
-                <p style="font-size: 1.3em;">Press <span style="color: var(--power-color); font-weight: bold;">W</span> for wave</p>
-                <div class="fragment" style="margin-top: 50px;">
-                    <p style="font-size: 1.8em;">
-                        AI <span class="fear-text" style="text-decoration: line-through;">didn't replace me</span> today.
+            <section class="center-content">
+                <span class="phase-badge">Finale</span>
+                <h2>THE GOODBYE</h2>
+                <p style="font-size: 1.1em; margin: 20px 0;">Press <span class="text-primary"
+                        style="font-weight: bold; font-size: 1.5em;">W</span> for wave</p>
+                <div class="fragment fade-up" style="margin-top: 50px;">
+                    <p style="font-size: 1.6em;">
+                        AI <span class="fear-strike">didn't replace me</span> today.
                     </p>
                 </div>
-                <div class="fragment">
-                    <p style="font-size: 2em; color: var(--power-color); font-weight: bold;">
+                <div class="fragment fade-up" style="margin-top: 20px;">
+                    <p class="text-primary text-glow" style="font-size: 2.5em; font-weight: bold;">
                         It AMPLIFIED me.
                     </p>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- FINAL MESSAGE -->
             <!-- ============================================ -->
-            <section data-background-color="#0a0a0f">
-                <h2 style="font-size: 2.5em;">
+            <section class="center-content"
+                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.1) 0%, rgba(10, 10, 10, 1) 70%)">
+                <h2 style="font-size: 2em; font-weight: 300;">
                     The question isn't<br>
-                    <span class="fear-text">"Will AI replace me?"</span>
+                    <span class="text-danger">"Will AI replace me?"</span>
                 </h2>
-                <div class="fragment" style="margin-top: 50px;">
-                    <h2 style="font-size: 2.5em; color: var(--power-color);">
-                        It's "What do I want<br>
-                        AI to replace FOR me?"
+                <div class="fragment fade-up" style="margin-top: 50px;">
+                    <h2 class="text-primary text-glow" style="font-size: 2.5em;">
+                        It's "What do I want<br>AI to replace FOR me?"
                     </h2>
                 </div>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- CTA -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%)">
-                <h2 class="power-text">Your Turn</h2>
-                <div class="highlight-box">
-                    <p style="font-size: 1.3em;">
-                        🎯 Identify 3 tasks you'd love to delegate<br>
-                        🤖 Find the AI tools that can do them<br>
-                        📣 Command: "AI, Replace THIS!"
+            <section>
+                <span class="phase-badge">Call to Action</span>
+                <h2 class="text-primary">YOUR TURN</h2>
+                <div class="terminal-block" style="max-width: 600px; margin: 30px 0;">
+                    <p style="line-height: 2;">
+                        <span class="text-primary">&gt;</span> Identify 3 tasks you'd love to delegate<br>
+                        <span class="text-primary">&gt;</span> Find the AI tools that can do them<br>
+                        <span class="text-primary">&gt;</span> Command: "AI, Replace THIS!"
                     </p>
                 </div>
-                <p style="margin-top: 40px; font-size: 1.5em;">
-                    Start directing. Stop fearing.
+                <p style="font-size: 1.5em; margin-top: 40px;">
+                    <span class="text-primary">Start directing.</span> Stop fearing.
                 </p>
             </section>
-            
+
             <!-- ============================================ -->
             <!-- THANK YOU -->
             <!-- ============================================ -->
-            <section data-background-gradient="linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%)">
-                <div class="robot-icon">🤖</div>
-                <h2>Thank You</h2>
-                <p style="opacity: 0.7; margin-top: 30px;">
-                    Demo powered by <a href="https://www.pollen-robotics.com/" target="_blank" style="color: var(--power-color);">Pollen Robotics</a> Reachy 2 SDK
+            <section class="center-content">
+                <div style="font-size: 5em;" class="robot-float">🤖</div>
+                <h2 style="margin-top: 30px;">THANK YOU</h2>
+                <p class="text-muted" style="margin-top: 30px;">
+                    Demo powered by <a href="https://www.pollen-robotics.com/" target="_blank"
+                        style="color: var(--primary);">Pollen Robotics</a> Reachy 2 SDK
                 </p>
-                <p style="opacity: 0.5; margin-top: 20px; font-size: 0.8em;">
+                <p class="mono" style="margin-top: 20px; font-size: 0.7em; color: rgba(255,255,255,0.3);">
                     github.com/hkcarre/reachy_presentation_ai
                 </p>
             </section>
-            
+
         </div>
     </div>
-    
+
     <!-- Reveal.js -->
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.js"></script>
-    
+
     <script>
-        Reveal.initialize({
-            hash: true,
-            transition: 'slide',
-            transitionSpeed: 'default',
-            backgroundTransition: 'fade',
-            plugins: [ RevealHighlight ],
-            
-            // Keyboard shortcuts info
-            keyboard: {
-                // Add custom info overlay
-                72: function() { // 'h' key
-                    alert('Demo Controls:\n\n1 = Opener sequence\n2 = Snap to attention\n3-6 = Gestures\n7-0 = Emotions\nW = Wave goodbye\nH = Home position\nR = Reset');
+        // ================================
+        // PARTICLE CANVAS (Neural Network Style)
+        // ================================
+        (function () {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 150;
+            const connectionDistance = 120;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                init();
+            }
+
+            function init() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 0.5,
+                        alpha: Math.random() * 0.5 + 0.2
+                    });
                 }
             }
-        });
-        
-        // Log navigation for debugging
-        Reveal.on('slidechanged', event => {
-            console.log('Slide:', event.indexh, event.indexv);
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Bounce off edges
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 255, 159, ${p.alpha})`;
+                    ctx.fill();
+
+                    // Draw connections
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(0, 255, 159, ${0.15 * (1 - dist / connectionDistance)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            draw();
+        })();
+
+        // ================================
+        // REVEAL.JS INIT
+        // ================================
+        Reveal.initialize({
+            hash: true,
+            transition: 'fade',
+            transitionSpeed: 'slow',
+            backgroundTransition: 'fade',
+            plugins: [RevealHighlight],
+            center: false,
+            width: '100%',
+            height: '100%',
+            margin: 0,
+            minScale: 1,
+            maxScale: 1
         });
     </script>
 </body>
+
 </html>
