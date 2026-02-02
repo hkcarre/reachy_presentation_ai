@@ -13,71 +13,116 @@
     <!-- Highlight.js for code -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/monokai.css">
 
-    <!-- Google Fonts - matching inspiration -->
+    <!-- Google Fonts - Premium Typography -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700&family=Roboto+Mono:wght@100;400&family=Space+Grotesk:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
         rel="stylesheet">
 
     <style>
         :root {
-            --bg: #0a0a0a;
-            --primary: #00ff9f;
-            --secondary: #00d4ff;
-            --warning: #ff9500;
-            --danger: #ff4444;
-            --text: #ffffff;
-            --gray: #333333;
+            --bg-dark: #05070a;
+            --bg-card: rgba(15, 20, 30, 0.8);
+            --primary: #00e5a0;
+            --primary-dim: rgba(0, 229, 160, 0.15);
+            --secondary: #00b4d8;
+            --accent: #7c3aed;
+            --danger: #ef4444;
+            --text: #f8fafc;
+            --text-muted: rgba(248, 250, 252, 0.5);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        /* Reset Reveal.js defaults */
+        /* ================================ */
+        /* RESET & BASE */
+        /* ================================ */
         .reveal-viewport {
-            background: var(--bg);
+            background: var(--bg-dark);
         }
 
         .reveal {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 300;
         }
 
         .reveal h1,
         .reveal h2,
         .reveal h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+
+        .reveal h1 {
+            font-size: 3em;
+            line-height: 1.1;
+        }
+
+        .reveal h2 {
+            font-size: 2.2em;
+            line-height: 1.2;
+        }
+
+        .reveal h3 {
+            font-size: 1.4em;
         }
 
         .reveal code,
         .reveal .mono {
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 400;
         }
 
         /* ================================ */
-        /* SCANLINE EFFECT */
+        /* ANIMATED GRADIENT BACKGROUNDS */
         /* ================================ */
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 159, 0.15);
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            animation: scanline 8s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes scanline {
+        @keyframes gradient-shift {
             0% {
-                top: -2px;
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
             }
 
             100% {
-                top: 100%;
+                background-position: 0% 50%;
             }
         }
 
+        .bg-premium-dark {
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(0, 229, 160, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #05070a 0%, #0a0f1a 100%);
+        }
+
+        .bg-premium-gradient {
+            background:
+                radial-gradient(ellipse at 0% 0%, rgba(0, 229, 160, 0.2) 0%, transparent 40%),
+                radial-gradient(ellipse at 100% 100%, rgba(124, 58, 237, 0.2) 0%, transparent 40%),
+                linear-gradient(135deg, #05070a 0%, #0d1117 50%, #05070a 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        .bg-mesh {
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M0 30h60M30 0v60' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 50% 0%, rgba(0, 180, 216, 0.15) 0%, transparent 60%),
+                linear-gradient(180deg, #05070a 0%, #0a0f1a 100%);
+        }
+
+        .bg-dramatic {
+            background:
+                radial-gradient(circle at 50% 50%, rgba(0, 229, 160, 0.3) 0%, transparent 30%),
+                radial-gradient(ellipse at 20% 80%, rgba(124, 58, 237, 0.2) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 180, 216, 0.15) 0%, transparent 40%),
+                #05070a;
+        }
+
         /* ================================ */
-        /* PARTICLE CANVAS */
+        /* PARTICLE SYSTEM */
         /* ================================ */
         #particle-canvas {
             position: fixed;
@@ -87,37 +132,11 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
         /* ================================ */
-        /* TEXT GLOW EFFECTS */
-        /* ================================ */
-        .text-glow {
-            text-shadow: 0 0 10px rgba(0, 255, 159, 0.5), 0 0 20px rgba(0, 255, 159, 0.3), 0 0 40px rgba(0, 255, 159, 0.2);
-        }
-
-        .text-glow-blue {
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .text-glow-red {
-            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5), 0 0 20px rgba(255, 68, 68, 0.3);
-        }
-
-        /* ================================ */
-        /* BACKGROUND GLOWS */
-        /* ================================ */
-        .bg-glow-green {
-            background: radial-gradient(circle, rgba(0, 255, 159, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
-        }
-
-        .bg-glow-blue {
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
-        }
-
-        /* ================================ */
-        /* COLORS */
+        /* TYPOGRAPHY */
         /* ================================ */
         .text-primary {
             color: var(--primary);
@@ -131,184 +150,144 @@
             color: var(--danger);
         }
 
-        .text-warning {
-            color: var(--warning);
+        .text-muted {
+            color: var(--text-muted);
         }
 
-        .text-muted {
-            color: rgba(255, 255, 255, 0.4);
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(0, 229, 160, 0.4), 0 0 60px rgba(0, 229, 160, 0.2);
         }
 
         /* ================================ */
-        /* PROGRESS BAR (TOP) */
+        /* PROGRESS BAR */
         /* ================================ */
         .reveal .progress {
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .reveal .progress span {
-            background: var(--primary);
-            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
         /* ================================ */
-        /* TITLE SLIDE */
+        /* CARDS & CONTAINERS */
         /* ================================ */
-        .title-container {
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+        }
+
+        .glass-card-sm {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ================================ */
+        /* ROBOT EMBED FRAME */
+        /* ================================ */
+        .robot-frame {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
             position: relative;
         }
 
-        .title-orb {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .robot-frame .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75em;
+        }
+
+        .robot-frame .header .status {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 40px;
-            position: relative;
-            animation: pulse-orb 4s ease-in-out infinite;
+            gap: 8px;
         }
 
-        .title-orb::before {
-            content: '';
-            position: absolute;
-            inset: -20px;
-            border: 1px solid rgba(0, 255, 159, 0.2);
-            border-radius: 50%;
-            animation: spin 15s linear infinite;
-        }
-
-        .title-orb::after {
-            content: '';
-            position: absolute;
-            inset: -40px;
-            border: 1px dashed rgba(0, 255, 159, 0.1);
-            border-radius: 50%;
-            animation: spin 25s linear infinite reverse;
-        }
-
-        .title-orb .core {
-            width: 12px;
-            height: 12px;
+        .robot-frame .header .status-dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--primary);
-            box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse-orb {
+        .robot-frame iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            background: #000;
+        }
+
+        .robot-frame .placeholder {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(15, 20, 30, 0.9) 100%);
+            color: var(--text-muted);
+        }
+
+        .robot-frame .placeholder svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        @keyframes pulse {
 
             0%,
             100% {
-                transform: scale(1);
                 opacity: 1;
             }
 
             50% {
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
+                opacity: 0.4;
             }
         }
 
         /* ================================ */
-        /* FEAR TEXT (STRIKETHROUGH) */
-        /* ================================ */
-        .fear-strike {
-            color: var(--danger);
-            position: relative;
-            display: inline-block;
-        }
-
-        .fear-strike::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            height: 3px;
-            background: var(--danger);
-            animation: strike 0.5s ease-out forwards;
-            animation-delay: 1s;
-            transform: scaleX(0);
-            transform-origin: left;
-        }
-
-        @keyframes strike {
-            to {
-                transform: scaleX(1);
-            }
-        }
-
-        /* ================================ */
-        /* CINEMATIC TEXT (TYPEWRITER) */
-        /* ================================ */
-        .typewriter {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid var(--primary);
-            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        @keyframes typing {
-            from {
-                width: 0
-            }
-
-            to {
-                width: 100%
-            }
-        }
-
-        @keyframes blink-caret {
-
-            from,
-            to {
-                border-color: transparent
-            }
-
-            50% {
-                border-color: var(--primary);
-            }
-        }
-
-        /* ================================ */
-        /* CONTROL CARDS */
+        /* CONTROL GRID */
         /* ================================ */
         .control-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 16px;
             margin-top: 30px;
         }
 
         .control-card {
-            background: rgba(0, 255, 159, 0.05);
-            border: 1px solid rgba(0, 255, 159, 0.2);
-            padding: 20px 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 16px;
             text-align: center;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .control-card:hover {
-            border-color: var(--primary);
-            background: rgba(0, 255, 159, 0.1);
-            transform: translateY(-2px);
         }
 
         .control-card::before {
@@ -323,22 +302,26 @@
             transition: opacity 0.3s;
         }
 
+        .control-card:hover {
+            border-color: rgba(0, 229, 160, 0.3);
+            transform: translateY(-2px);
+        }
+
         .control-card:hover::before {
             opacity: 1;
         }
 
         .control-card .key {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 2em;
-            font-weight: bold;
+            font-weight: 500;
             color: var(--primary);
-            font-family: 'Roboto Mono', monospace;
-            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 8px;
         }
 
         .control-card .label {
-            font-size: 0.7em;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 8px;
+            font-size: 0.8em;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -349,20 +332,22 @@
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
 
         .comparison-table th,
         .comparison-table td {
-            padding: 20px;
+            padding: 20px 24px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border);
         }
 
         .comparison-table th {
-            font-size: 0.8em;
+            font-size: 0.75em;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
         }
 
         .comparison-table td.old {
@@ -373,158 +358,110 @@
 
         .comparison-table td.new {
             color: var(--primary);
-            font-weight: 500;
+            font-weight: 400;
         }
 
         /* ================================ */
-        /* TERMINAL BLOCK */
+        /* PHASE LABEL */
         /* ================================ */
-        .terminal-block {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.8em;
-            text-align: left;
-            backdrop-filter: blur(10px);
-        }
-
-        .terminal-block .header {
-            display: flex;
-            justify-content: space-between;
+        .phase-label {
+            display: inline-flex;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .terminal-block .status {
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--primary-dim);
+            border: 1px solid rgba(0, 229, 160, 0.2);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65em;
+            font-weight: 500;
             color: var(--primary);
-            animation: pulse 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 24px;
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+        .phase-label .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
         }
 
         /* ================================ */
-        /* NEURAL BAR CHART */
+        /* BLOCKQUOTE */
         /* ================================ */
-        .neural-bars {
-            display: flex;
-            gap: 3px;
-            height: 40px;
-            align-items: flex-end;
-        }
-
-        .neural-bars .bar {
-            flex: 1;
-            background: var(--secondary);
-            opacity: 0.6;
-            animation: neural-pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes neural-pulse {
-
-            0%,
-            100% {
-                transform: scaleY(1);
-            }
-
-            50% {
-                transform: scaleY(0.3);
-            }
-        }
-
-        /* ================================ */
-        /* QUOTE STYLING */
-        /* ================================ */
-        .big-quote {
-            font-size: 1.5em;
+        .premium-quote {
+            font-size: 1.4em;
             font-weight: 300;
             line-height: 1.6;
             position: relative;
             padding-left: 30px;
-            border-left: 3px solid var(--primary);
+            border-left: 2px solid;
+            border-image: linear-gradient(180deg, var(--primary), var(--secondary)) 1;
         }
 
         /* ================================ */
-        /* BADGE */
+        /* CODE BLOCKS */
         /* ================================ */
-        .phase-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            background: rgba(0, 255, 159, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.6em;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            margin-bottom: 20px;
+        .reveal pre {
+            box-shadow: none;
+            font-size: 0.7em;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .reveal pre code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            max-height: 450px;
         }
 
         /* ================================ */
-        /* SIDE META DISPLAY */
-        /* ================================ */
-        .side-meta {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
-            transform-origin: left center;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 9px;
-            letter-spacing: 0.3em;
-            color: rgba(255, 255, 255, 0.2);
-            text-transform: uppercase;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        /* ================================ */
-        /* REVEAL.JS OVERRIDES */
+        /* SLIDE LAYOUTS */
         /* ================================ */
         .reveal .slides {
             text-align: left;
         }
 
         .reveal .slides>section {
-            padding: 40px 60px;
+            padding: 50px 80px;
         }
 
-        .reveal pre {
-            box-shadow: none;
-            font-size: 0.65em;
-            width: 100%;
-        }
-
-        .reveal pre code {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 159, 0.2);
-            border-radius: 8px;
-            padding: 25px;
-            max-height: 500px;
-        }
-
-        /* Center certain slides */
-        .reveal .slides section.center-content {
+        .reveal .slides section.center-slide {
             text-align: center;
         }
 
-        .reveal .slides section.center-content h1,
-        .reveal .slides section.center-content h2,
-        .reveal .slides section.center-content p {
+        .reveal .slides section.center-slide h1,
+        .reveal .slides section.center-slide h2,
+        .reveal .slides section.center-slide p {
             text-align: center;
+        }
+
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* ================================ */
+        /* ICONS (SVG) */
+        /* ================================ */
+        .icon {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .icon-lg {
+            width: 48px;
+            height: 48px;
         }
 
         /* ================================ */
@@ -538,14 +475,67 @@
         .reveal .slides section .fragment.fade-up.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Strike-through animation */
+        .strike-through {
+            position: relative;
+            display: inline;
+        }
+
+        .strike-through::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: var(--danger);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s ease;
+        }
+
+        .fragment.visible .strike-through::after,
+        .strike-through.active::after {
+            transform: scaleX(1);
         }
 
         /* ================================ */
-        /* ROBOT ICON ANIMATION */
+        /* ORBS & DECORATIVE */
         /* ================================ */
-        .robot-float {
-            animation: float 3s ease-in-out infinite;
+        .hero-orb {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(0, 229, 160, 0.3), transparent 60%),
+                radial-gradient(circle at 70% 70%, rgba(124, 58, 237, 0.2), transparent 60%),
+                rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-orb::before {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            border: 1px solid rgba(0, 229, 160, 0.15);
+            border-radius: 50%;
+            animation: spin 20s linear infinite;
+        }
+
+        .hero-orb .core {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 30px var(--primary), 0 0 60px var(--primary);
         }
 
         @keyframes float {
@@ -556,32 +546,43 @@
             }
 
             50% {
-                transform: translateY(-15px);
+                transform: translateY(-12px);
             }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================================ */
+        /* RESPONSIVE */
+        /* ================================ */
+        @media (max-width: 1024px) {
             .control-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
             .reveal .slides>section {
-                padding: 20px 30px;
+                padding: 30px 40px;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Scanline Effect -->
-    <div class="scanline"></div>
-
     <!-- Particle Canvas -->
     <canvas id="particle-canvas"></canvas>
-
-    <!-- Side Meta -->
-    <div class="side-meta">AI Presentation System v2.0</div>
 
     <div class="reveal">
         <div class="slides">
@@ -589,33 +590,31 @@
             <!-- ============================================ -->
             <!-- TITLE SLIDE -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <div class="title-container">
-                    <div class="title-orb">
-                        <div class="core"></div>
-                    </div>
-                    <h1 style="font-size: 2.2em; margin-bottom: 20px;">
-                        From <span class="fear-strike">"AI Will Replace Me"</span><br>
-                        to <span class="text-primary text-glow">"AI, Replace This"</span>
-                    </h1>
-                    <p class="mono text-muted" style="font-size: 0.9em;">
-                        A live demonstration with Reachy 2
-                    </p>
+            <section class="center-slide bg-premium-gradient">
+                <div class="hero-orb">
+                    <div class="core"></div>
                 </div>
+                <h1 style="margin-bottom: 16px;">
+                    From <span class="text-danger">"AI Will Replace Me"</span><br>
+                    to <span class="text-gradient">"AI, Replace This"</span>
+                </h1>
+                <p class="text-muted mono" style="font-size: 0.95em; margin-top: 24px;">
+                    A live demonstration with Reachy 2
+                </p>
             </section>
 
             <!-- ============================================ -->
             <!-- THE FEAR -->
             <!-- ============================================ -->
-            <section class="center-content" data-background="rgba(30, 10, 10, 0.8)">
-                <span class="phase-badge">Phase 01</span>
-                <h2 class="text-danger text-glow-red" style="font-size: 3em;">THE FEAR</h2>
-                <div style="max-width: 600px; margin: 40px auto;">
-                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"AI is coming
+            <section class="center-slide bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Phase 01</div>
+                <h2 class="text-danger" style="font-size: 3em; margin-bottom: 40px;">The Fear</h2>
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <p class="fragment fade-up" style="font-size: 1.5em; margin: 24px 0; opacity: 0.8;">"AI is coming
                         for my job"</p>
-                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"I can't compete
+                    <p class="fragment fade-up" style="font-size: 1.5em; margin: 24px 0; opacity: 0.8;">"I can't compete
                         with machines"</p>
-                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 20px 0; opacity: 0.8;">"I'm going to be
+                    <p class="fragment fade-up" style="font-size: 1.5em; margin: 24px 0; opacity: 0.8;">"I'm going to be
                         replaced"</p>
                 </div>
             </section>
@@ -623,10 +622,10 @@
             <!-- ============================================ -->
             <!-- THE FLIP -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <span class="phase-badge">Phase 02</span>
-                <h2 style="font-size: 2.5em;">THE FLIP</h2>
-                <div class="big-quote" style="max-width: 700px; margin: 40px auto;">
+            <section class="center-slide bg-premium-dark">
+                <div class="phase-label"><span class="dot"></span>Phase 02</div>
+                <h2 style="font-size: 2.5em; margin-bottom: 40px;">The Reframe</h2>
+                <div class="premium-quote" style="max-width: 700px; margin: 0 auto; text-align: left;">
                     But what if the question isn't<br>
                     <span class="text-danger">what AI will do TO you</span>...<br><br>
                     but <span class="text-primary text-glow">what AI can do FOR you?</span>
@@ -636,13 +635,13 @@
             <!-- ============================================ -->
             <!-- MINDSET COMPARISON -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Paradigm Shift</span>
-                <h2>THE MINDSET SHIFT</h2>
-                <table class="comparison-table" style="margin-top: 30px;">
+            <section class="bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Paradigm Shift</div>
+                <h2>The Mindset Shift</h2>
+                <table class="comparison-table">
                     <tr>
-                        <th class="text-danger">❌ OLD_MINDSET</th>
-                        <th class="text-primary">✓ NEW_MINDSET</th>
+                        <th class="text-danger">Old Mindset</th>
+                        <th class="text-primary">New Mindset</th>
                     </tr>
                     <tr class="fragment fade-up">
                         <td class="old">"AI is coming for my job"</td>
@@ -664,45 +663,61 @@
             </section>
 
             <!-- ============================================ -->
-            <!-- MEET REACHY -->
+            <!-- MEET REACHY - WITH EMBEDDED ROBOT -->
             <!-- ============================================ -->
-            <section>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+            <section class="bg-premium-dark">
+                <div class="two-col">
                     <div>
-                        <span class="phase-badge">Hardware</span>
-                        <h2>MEET REACHY 2</h2>
-                        <ul style="margin-top: 30px; line-height: 2;">
-                            <li class="fragment fade-up">7 DoF arms with precision grippers</li>
-                            <li class="fragment fade-up">Expressive head with animated antennas</li>
-                            <li class="fragment fade-up">Full Python SDK control</li>
-                            <li class="fragment fade-up text-primary">Waits for YOUR commands</li>
+                        <div class="phase-label"><span class="dot"></span>Hardware</div>
+                        <h2>Meet Reachy 2</h2>
+                        <ul style="margin-top: 30px; line-height: 2.2; list-style: none; padding: 0;">
+                            <li class="fragment fade-up" style="display: flex; align-items: center; gap: 12px;">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.07-7.07l-2.83 2.83M9.76 14.24l-2.83 2.83m11.31 0l-2.83-2.83M9.76 9.76L6.93 6.93" />
+                                </svg>
+                                7 DoF arms with precision grippers
+                            </li>
+                            <li class="fragment fade-up" style="display: flex; align-items: center; gap: 12px;">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M12 2a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                    <line x1="12" y1="19" x2="12" y2="22" />
+                                </svg>
+                                Expressive head with animated antennas
+                            </li>
+                            <li class="fragment fade-up" style="display: flex; align-items: center; gap: 12px;">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <polyline points="16 18 22 12 16 6" />
+                                    <polyline points="8 6 2 12 8 18" />
+                                </svg>
+                                Full Python SDK control
+                            </li>
+                            <li class="fragment fade-up text-primary"
+                                style="display: flex; align-items: center; gap: 12px;">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                                <strong>Waits for YOUR commands</strong>
+                            </li>
                         </ul>
                     </div>
                     <div class="fragment fade-up">
-                        <div class="terminal-block">
+                        <div class="robot-frame">
                             <div class="header">
-                                <span>REACHY_SDK_v2.0</span>
-                                <span class="status">● CONNECTED</span>
-                            </div>
-                            <div style="color: var(--primary);">
-                                <p>&gt; from reachy2_sdk import ReachySDK</p>
-                                <p>&gt; reachy = ReachySDK(host='localhost')</p>
-                                <p>&gt; reachy.turn_on()</p>
-                                <p class="text-muted"># Awaiting commands...</p>
-                            </div>
-                            <div style="margin-top: 15px;">
-                                <div class="neural-bars">
-                                    <div class="bar" style="height: 80%; animation-delay: 0s;"></div>
-                                    <div class="bar" style="height: 60%; animation-delay: 0.1s;"></div>
-                                    <div class="bar" style="height: 90%; animation-delay: 0.2s;"></div>
-                                    <div class="bar" style="height: 40%; animation-delay: 0.3s;"></div>
-                                    <div class="bar" style="height: 70%; animation-delay: 0.4s;"></div>
-                                    <div class="bar" style="height: 50%; animation-delay: 0.5s;"></div>
-                                    <div class="bar" style="height: 85%; animation-delay: 0.6s;"></div>
-                                    <div class="bar" style="height: 65%; animation-delay: 0.7s;"></div>
+                                <span>REACHY_VIZ</span>
+                                <div class="status">
+                                    <span class="status-dot"></span>
+                                    <span>SIMULATION</span>
                                 </div>
                             </div>
+                            <iframe id="robot-iframe" src="http://localhost:6080/vnc.html?autoconnect=1&resize=remote"
+                                loading="lazy"></iframe>
                         </div>
+                        <p class="text-muted mono" style="font-size: 0.7em; text-align: center; margin-top: 12px;">
+                            Live robot simulation via VNC
+                        </p>
                     </div>
                 </div>
             </section>
@@ -710,19 +725,19 @@
             <!-- ============================================ -->
             <!-- ACT 1: THE OPENER -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <span class="phase-badge">Act 01</span>
-                <h2 style="font-size: 2.5em;">THE DISMISSIVE HANDWAVE</h2>
-                <div style="max-width: 700px; margin: 40px auto;">
+            <section class="center-slide bg-premium-gradient">
+                <div class="phase-label"><span class="dot"></span>Act 01</div>
+                <h2 style="font-size: 2.8em; margin-bottom: 30px;">The Dismissive Handwave</h2>
+                <div style="max-width: 700px; margin: 0 auto;">
                     <p class="fragment fade-up text-muted" style="font-size: 1.2em;">Robot is slumped. Defeated.
                         Waiting.</p>
-                    <p class="fragment fade-up" style="font-size: 1.3em; margin: 30px 0;">🎤 "Everyone's worried about
-                        AI replacing them..."</p>
-                    <p class="fragment fade-up" style="font-size: 1.3em;">👋 "But watch this..."</p>
+                    <p class="fragment fade-up" style="font-size: 1.4em; margin: 35px 0;">"Everyone's worried about AI
+                        replacing them..."</p>
+                    <p class="fragment fade-up" style="font-size: 1.4em;">"But watch this..."</p>
                     <div class="fragment fade-up" style="margin-top: 50px;">
-                        <p class="text-primary text-glow" style="font-size: 2.5em; font-weight: bold;">"AI, STAND AT
-                            ATTENTION!"</p>
-                        <p class="mono text-muted" style="margin-top: 15px;">[Press 1 or 2]</p>
+                        <p class="text-primary text-glow" style="font-size: 2.8em; font-weight: 600;">"AI, STAND AT
+                            ATTENTION."</p>
+                        <p class="mono text-muted" style="margin-top: 16px; font-size: 0.85em;">Press 1 or 2</p>
                     </div>
                 </div>
             </section>
@@ -730,83 +745,110 @@
             <!-- ============================================ -->
             <!-- PUNCHLINE 1 -->
             <!-- ============================================ -->
-            <section class="center-content"
-                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.1) 0%, rgba(10, 10, 10, 1) 70%)">
-                <h2 style="font-size: 3em; line-height: 1.4;">
+            <section class="center-slide bg-dramatic">
+                <h2 style="font-size: 3.2em; line-height: 1.3; font-weight: 300;">
                     AI doesn't replace you.<br>
-                    <span class="text-primary text-glow">AI REPORTS to you.</span>
+                    <span class="text-primary text-glow" style="font-weight: 600;">AI reports to you.</span>
                 </h2>
             </section>
 
             <!-- ============================================ -->
             <!-- ACT 2: IMPROV DIRECTOR -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Act 02</span>
-                <h2>THE LIVE IMPROV DIRECTOR</h2>
-                <p style="font-size: 1.1em; margin: 20px 0 10px; color: rgba(255,255,255,0.7);">Shout something you'd
-                    love to never do again!</p>
-                <p class="text-primary" style="font-size: 1.5em; margin-bottom: 30px;">I'll show you: "AI, Replace
-                    THIS!"</p>
+            <section class="bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Act 02</div>
+                <h2>The Live Director</h2>
+                <p style="font-size: 1.1em; margin: 16px 0 8px; color: rgba(255,255,255,0.7);">Shout something you'd
+                    love to never do again.</p>
+                <p class="text-primary" style="font-size: 1.4em; margin-bottom: 10px;">I'll show you: "AI, Replace
+                    THIS."</p>
 
                 <div class="control-grid">
                     <div class="control-card fragment fade-up">
                         <div class="key">3</div>
-                        <div class="label">Boring Meeting 😴</div>
+                        <div class="label">Boring Meeting</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">4</div>
-                        <div class="label">Pointing 👉</div>
+                        <div class="label">Pointing</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">5</div>
-                        <div class="label">Nodding 🙂‍↕️</div>
+                        <div class="label">Nodding</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">6</div>
-                        <div class="label">Shrugging 🤷</div>
+                        <div class="label">Shrugging</div>
                     </div>
                 </div>
             </section>
 
             <!-- ============================================ -->
-            <!-- COMMAND FRAME -->
+            <!-- LIVE DEMO SLIDE WITH ROBOT EMBED -->
             <!-- ============================================ -->
-            <section class="center-content"
-                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.15) 0%, rgba(10, 10, 10, 1) 60%)">
-                <h1 class="text-primary text-glow" style="font-size: 4em;">"AI, Replace THIS!"</h1>
-                <p style="font-size: 1.3em; margin-top: 30px; color: rgba(255,255,255,0.6);">
-                    You're the director. AI is the performer.
-                </p>
+            <section class="bg-premium-dark">
+                <div class="two-col" style="gap: 40px;">
+                    <div>
+                        <div class="phase-label"><span class="dot"></span>Live Demo</div>
+                        <h2 class="text-gradient">"AI, Replace This"</h2>
+                        <p class="text-muted" style="margin: 20px 0;">You're the director. AI is the performer.</p>
+
+                        <div class="glass-card-sm" style="margin-top: 30px;">
+                            <p class="mono" style="font-size: 0.8em; margin-bottom: 15px; color: var(--text-muted);">
+                                GESTURE CONTROLS</p>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div><span class="text-primary mono">3</span> — Bored</div>
+                                <div><span class="text-primary mono">4</span> — Point</div>
+                                <div><span class="text-primary mono">5</span> — Nod</div>
+                                <div><span class="text-primary mono">6</span> — Shrug</div>
+                                <div><span class="text-primary mono">H</span> — Home</div>
+                                <div><span class="text-primary mono">W</span> — Wave</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="robot-frame">
+                            <div class="header">
+                                <span>REACHY_LIVE</span>
+                                <div class="status">
+                                    <span class="status-dot"></span>
+                                    <span>ACTIVE</span>
+                                </div>
+                            </div>
+                            <iframe src="http://localhost:6080/vnc.html?autoconnect=1&resize=remote"
+                                loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- ============================================ -->
             <!-- ACT 3: EMOTION AMPLIFIER -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Act 03</span>
-                <h2>THE EMOTION AMPLIFIER</h2>
-                <p style="font-size: 1em; margin: 15px 0 30px; color: rgba(255,255,255,0.6);">
-                    "People fear AI because they think it's cold. But watch when we give AI... <span
-                        class="text-primary">stage directions.</span>"
+            <section class="bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Act 03</div>
+                <h2>The Emotion Amplifier</h2>
+                <p style="font-size: 1em; margin: 16px 0 30px; color: rgba(255,255,255,0.6);">
+                    "People fear AI because they think it's cold. Watch when we give AI <span class="text-primary">stage
+                        directions.</span>"
                 </p>
 
                 <div class="control-grid">
                     <div class="control-card fragment fade-up">
                         <div class="key">7</div>
-                        <div class="label">CURIOUS 🤔</div>
+                        <div class="label">Curious</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">8</div>
-                        <div class="label">DEFEATED 😔</div>
+                        <div class="label">Defeated</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">9</div>
-                        <div class="label">EXCITED 🎉</div>
+                        <div class="label">Excited</div>
                     </div>
                     <div class="control-card fragment fade-up">
                         <div class="key">0</div>
-                        <div class="label">LISTENING 👂</div>
+                        <div class="label">Listening</div>
                     </div>
                 </div>
             </section>
@@ -814,18 +856,18 @@
             <!-- ============================================ -->
             <!-- PUNCHLINE 2 -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <h2 style="font-size: 2.5em;">
-                    AI is a <span class="text-primary text-glow">blank canvas</span>.
+            <section class="center-slide bg-premium-dark">
+                <h2 style="font-size: 2.5em; font-weight: 300;">
+                    AI is a <span class="text-gradient">blank canvas</span>.
                 </h2>
                 <div class="fragment fade-up" style="margin-top: 40px;">
                     <p style="font-size: 1.5em;">
-                        YOU bring the emotion.<br>
-                        YOU bring the intent.
+                        You bring the emotion.<br>
+                        You bring the intent.
                     </p>
                 </div>
                 <div class="fragment fade-up" style="margin-top: 30px;">
-                    <p class="text-muted" style="font-size: 1.3em;">
+                    <p class="text-muted" style="font-size: 1.2em;">
                         Without your direction, it just sits there.
                     </p>
                 </div>
@@ -834,55 +876,55 @@
             <!-- ============================================ -->
             <!-- THE CODE -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Under the Hood</span>
-                <h2>THE CODE</h2>
+            <section class="bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Under the Hood</div>
+                <h2>The Code</h2>
                 <pre><code class="python" data-trim data-line-numbers>
 from reachy2_sdk import ReachySDK
 
 # Connect to robot
 reachy = ReachySDK(host='localhost')
 
-# YOU give the command
+# You give the command
 reachy.turn_on()
 
-# AI executes YOUR vision
+# AI executes your vision
 reachy.r_arm.goto([0, 10, -10, -90, 0, 0, 0], duration=2)
 reachy.head.look_at(0.5, 0, 0.2)
 
-# AI doesn't decide. AI OBEYS.
+# AI doesn't decide. AI obeys.
                 </code></pre>
-                <p class="fragment fade-up text-primary" style="margin-top: 25px; font-size: 1.1em;">
-                    Simple. Powerful. Under YOUR control.
+                <p class="fragment fade-up text-primary" style="margin-top: 24px; font-size: 1.1em;">
+                    Simple. Powerful. Under your control.
                 </p>
             </section>
 
             <!-- ============================================ -->
             <!-- KEY REFRAMES -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Cognitive Reframe</span>
-                <h2>REFRAME YOUR THINKING</h2>
-                <table class="comparison-table" style="margin-top: 20px;">
+            <section class="bg-premium-dark">
+                <div class="phase-label"><span class="dot"></span>Cognitive Reframe</div>
+                <h2>Reframe Your Thinking</h2>
+                <table class="comparison-table">
                     <tr>
-                        <th class="text-danger">FEAR_PHRASE</th>
-                        <th class="text-primary">YOUR_COUNTER</th>
+                        <th class="text-danger">Fear Phrase</th>
+                        <th class="text-primary">Your Counter</th>
                     </tr>
                     <tr class="fragment fade-up">
                         <td class="old">"AI will take my job"</td>
-                        <td class="new">"AI will take my TASKS"</td>
+                        <td class="new">"AI will take my tasks"</td>
                     </tr>
                     <tr class="fragment fade-up">
                         <td class="old">"AI is smarter than me"</td>
-                        <td class="new">"AI is faster at SPECIFIC things"</td>
+                        <td class="new">"AI is faster at specific things"</td>
                     </tr>
                     <tr class="fragment fade-up">
                         <td class="old">"I can't compete with AI"</td>
-                        <td class="new">"I don't compete. I DIRECT."</td>
+                        <td class="new">"I don't compete. I direct."</td>
                     </tr>
                     <tr class="fragment fade-up">
                         <td class="old">"AI doesn't need me"</td>
-                        <td class="new">"AI is USELESS without me"</td>
+                        <td class="new">"AI is useless without me"</td>
                     </tr>
                 </table>
             </section>
@@ -890,19 +932,19 @@ reachy.head.look_at(0.5, 0, 0.2)
             <!-- ============================================ -->
             <!-- CLOSER -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <span class="phase-badge">Finale</span>
-                <h2>THE GOODBYE</h2>
-                <p style="font-size: 1.1em; margin: 20px 0;">Press <span class="text-primary"
-                        style="font-weight: bold; font-size: 1.5em;">W</span> for wave</p>
+            <section class="center-slide bg-premium-gradient">
+                <div class="phase-label"><span class="dot"></span>Finale</div>
+                <h2>The Goodbye</h2>
+                <p style="font-size: 1.1em; margin: 24px 0;">Press <span class="text-primary mono"
+                        style="font-weight: 500; font-size: 1.3em;">W</span> for wave</p>
                 <div class="fragment fade-up" style="margin-top: 50px;">
                     <p style="font-size: 1.6em;">
-                        AI <span class="fear-strike">didn't replace me</span> today.
+                        AI <span class="strike-through active text-danger">didn't replace me</span> today.
                     </p>
                 </div>
-                <div class="fragment fade-up" style="margin-top: 20px;">
-                    <p class="text-primary text-glow" style="font-size: 2.5em; font-weight: bold;">
-                        It AMPLIFIED me.
+                <div class="fragment fade-up" style="margin-top: 24px;">
+                    <p class="text-primary text-glow" style="font-size: 2.8em; font-weight: 600;">
+                        It amplified me.
                     </p>
                 </div>
             </section>
@@ -910,15 +952,14 @@ reachy.head.look_at(0.5, 0, 0.2)
             <!-- ============================================ -->
             <!-- FINAL MESSAGE -->
             <!-- ============================================ -->
-            <section class="center-content"
-                data-background="radial-gradient(circle at center, rgba(0, 255, 159, 0.1) 0%, rgba(10, 10, 10, 1) 70%)">
+            <section class="center-slide bg-dramatic">
                 <h2 style="font-size: 2em; font-weight: 300;">
                     The question isn't<br>
                     <span class="text-danger">"Will AI replace me?"</span>
                 </h2>
                 <div class="fragment fade-up" style="margin-top: 50px;">
-                    <h2 class="text-primary text-glow" style="font-size: 2.5em;">
-                        It's "What do I want<br>AI to replace FOR me?"
+                    <h2 class="text-gradient" style="font-size: 2.5em;">
+                        It's "What do I want<br>AI to replace for me?"
                     </h2>
                 </div>
             </section>
@@ -926,15 +967,33 @@ reachy.head.look_at(0.5, 0, 0.2)
             <!-- ============================================ -->
             <!-- CTA -->
             <!-- ============================================ -->
-            <section>
-                <span class="phase-badge">Call to Action</span>
-                <h2 class="text-primary">YOUR TURN</h2>
-                <div class="terminal-block" style="max-width: 600px; margin: 30px 0;">
-                    <p style="line-height: 2;">
-                        <span class="text-primary">&gt;</span> Identify 3 tasks you'd love to delegate<br>
-                        <span class="text-primary">&gt;</span> Find the AI tools that can do them<br>
-                        <span class="text-primary">&gt;</span> Command: "AI, Replace THIS!"
-                    </p>
+            <section class="bg-mesh">
+                <div class="phase-label"><span class="dot"></span>Action</div>
+                <h2 class="text-gradient">Your Turn</h2>
+                <div class="glass-card" style="max-width: 600px; margin: 30px 0;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <svg class="icon text-primary" viewBox="0 0 24 24">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            <span>Identify 3 tasks you'd love to delegate</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <svg class="icon text-primary" viewBox="0 0 24 24">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            <span>Find the AI tools that can do them</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <svg class="icon text-primary" viewBox="0 0 24 24">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            <span>Command: "AI, Replace This."</span>
+                        </div>
+                    </div>
                 </div>
                 <p style="font-size: 1.5em; margin-top: 40px;">
                     <span class="text-primary">Start directing.</span> Stop fearing.
@@ -944,14 +1003,16 @@ reachy.head.look_at(0.5, 0, 0.2)
             <!-- ============================================ -->
             <!-- THANK YOU -->
             <!-- ============================================ -->
-            <section class="center-content">
-                <div style="font-size: 5em;" class="robot-float">🤖</div>
-                <h2 style="margin-top: 30px;">THANK YOU</h2>
+            <section class="center-slide bg-premium-gradient">
+                <div class="hero-orb" style="width: 120px; height: 120px; margin-bottom: 30px;">
+                    <div class="core" style="width: 12px; height: 12px;"></div>
+                </div>
+                <h2 style="margin-bottom: 16px;">Thank You</h2>
                 <p class="text-muted" style="margin-top: 30px;">
                     Demo powered by <a href="https://www.pollen-robotics.com/" target="_blank"
-                        style="color: var(--primary);">Pollen Robotics</a> Reachy 2 SDK
+                        style="color: var(--primary); text-decoration: none;">Pollen Robotics</a> Reachy 2 SDK
                 </p>
-                <p class="mono" style="margin-top: 20px; font-size: 0.7em; color: rgba(255,255,255,0.3);">
+                <p class="mono" style="margin-top: 16px; font-size: 0.75em; color: rgba(255,255,255,0.3);">
                     github.com/hkcarre/reachy_presentation_ai
                 </p>
             </section>
@@ -965,14 +1026,14 @@ reachy.head.look_at(0.5, 0, 0.2)
 
     <script>
         // ================================
-        // PARTICLE CANVAS (Neural Network Style)
+        // PARTICLE CANVAS
         // ================================
         (function () {
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
-            const particleCount = 150;
-            const connectionDistance = 120;
+            const particleCount = 80;
+            const connectionDistance = 150;
 
             function resize() {
                 canvas.width = window.innerWidth;
@@ -986,10 +1047,10 @@ reachy.head.look_at(0.5, 0, 0.2)
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        size: Math.random() * 2 + 0.5,
-                        alpha: Math.random() * 0.5 + 0.2
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        size: Math.random() * 1.5 + 0.5,
+                        alpha: Math.random() * 0.3 + 0.1
                     });
                 }
             }
@@ -998,18 +1059,16 @@ reachy.head.look_at(0.5, 0, 0.2)
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 particles.forEach((p, i) => {
-                    // Update position
                     p.x += p.vx;
                     p.y += p.vy;
 
-                    // Bounce off edges
                     if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
                     if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
                     // Draw particle
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 255, 159, ${p.alpha})`;
+                    ctx.fillStyle = `rgba(0, 229, 160, ${p.alpha})`;
                     ctx.fill();
 
                     // Draw connections
@@ -1023,7 +1082,7 @@ reachy.head.look_at(0.5, 0, 0.2)
                             ctx.beginPath();
                             ctx.moveTo(p.x, p.y);
                             ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = `rgba(0, 255, 159, ${0.15 * (1 - dist / connectionDistance)})`;
+                            ctx.strokeStyle = `rgba(0, 229, 160, ${0.08 * (1 - dist / connectionDistance)})`;
                             ctx.lineWidth = 0.5;
                             ctx.stroke();
                         }
