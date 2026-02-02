@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reachy Demo - Live View</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --power-color: #00d4aa;
+            --accent-color: #7c3aed;
+            --bg-dark: #0a0a0f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 100%);
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            color: var(--power-color);
+        }
+
+        header .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--power-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .robot-view {
+            flex: 2;
+            background: #1a1a2e;
+            border-radius: 15px;
+            border: 2px solid var(--accent-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .robot-view iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: none;
+        }
+
+        .robot-view .placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .robot-view .placeholder .emoji {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .controls-panel {
+            flex: 1;
+            max-width: 350px;
+        }
+
+        .controls-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .controls-section h3 {
+            color: var(--power-color);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(124, 58, 237, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .control-btn .key {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--power-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .control-btn .label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .note {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .note strong {
+            color: #ffc107;
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 15px 40px;
+            text-align: center;
+            font-size: 0.85em;
+            opacity: 0.7;
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        a {
+            color: var(--power-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🤖 AI, Replace This - Live Demo</h1>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>Robot Simulation</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="robot-view">
+            <!-- This will load the VNC viewer when Docker is running -->
+            <iframe id="robot-frame" src="http://localhost:6080/vnc.html?autoconnect=1&resize=remote"></iframe>
+            <div class="placeholder" id="placeholder">
+                <div class="emoji">🤖</div>
+                <p>Robot visualization loading...</p>
+                <p style="margin-top: 10px; font-size: 0.9em;">
+                    If blank, ensure Docker simulation is running
+                </p>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="controls-section">
+                <h3>🎬 ACT 1: OPENER</h3>
+                <div class="control-grid">
+                    <div class="control-btn">
+                        <span class="key">1</span>
+                        <span class="label">Full Sequence</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">2</span>
+                        <span class="label">Attention</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>🎭 ACT 2: GESTURES</h3>
+                <div class="control-grid">
+                    <div class="control-btn">
+                        <span class="key">3</span>
+                        <span class="label">Bored</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">4</span>
+                        <span class="label">Point</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">5</span>
+                        <span class="label">Nod</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">6</span>
+                        <span class="label">Shrug</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>💫 ACT 3: EMOTIONS</h3>
+                <div class="control-grid">
+                    <div class="control-btn">
+                        <span class="key">7</span>
+                        <span class="label">Curious</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">8</span>
+                        <span class="label">Defeated</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">9</span>
+                        <span class="label">Excited</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">0</span>
+                        <span class="label">Listening</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>🛠️ UTILITIES</h3>
+                <div class="control-grid">
+                    <div class="control-btn">
+                        <span class="key">H</span>
+                        <span class="label">Home</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">W</span>
+                        <span class="label">Wave 👋</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">R</span>
+                        <span class="label">Reset</span>
+                    </div>
+                    <div class="control-btn">
+                        <span class="key">Q</span>
+                        <span class="label">Quit</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Note:</strong> Run the Python demo script in a terminal to enable keyboard controls. This page
+                shows the robot visualization only.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Powered by <a href="https://www.pollen-robotics.com/" target="_blank">Pollen Robotics</a> Reachy 2 SDK
+    </footer>
+
+    <script>
+        // Hide placeholder once iframe loads
+        document.getElementById('robot-frame').onload = function () {
+            document.getElementById('placeholder').style.display = 'none';
+        };
+
+        // Handle iframe load errors
+        document.getElementById('robot-frame').onerror = function () {
+            document.getElementById('placeholder').innerHTML = `
+                <div class="emoji">⚠️</div>
+                <p>Could not connect to robot simulation</p>
+                <p style="margin-top: 10px; font-size: 0.9em;">
+                    Run: <code>docker run --rm -p 6080:6080 -p 50051:50051 docker.io/pollenrobotics/reachy2</code>
+                </p>
+            `;
+        };
+    </script>
+</body>
+
+</html>
